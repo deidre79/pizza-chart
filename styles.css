@@ -1,8 +1,8 @@
 :root {
-    --color-background: #ECF3FF;
+    --color-background: #EAB252;
     --color-body: #FFFFFF;
-    --color-text: #474443;
-    --color-accent: #85A0CF;
+    --color-text: #000000;
+    --color-accent: #903300;
 }
 
 html {
@@ -23,7 +23,6 @@ h1 {
     margin: 0;
     padding: 20px 0;
     color: var(--color-text);
-    text-shadow: 3px 3px 1px var(--color-accent);
     font-size: 60px;
     text-align: center;
 }
