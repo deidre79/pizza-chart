@@ -1,6 +1,6 @@
 // set the dimensions and margins of the graph
-const margin = {top: 10, right: 30, bottom: 30, left: 40},
-    width = 460 - margin.left - margin.right,
+const margin = {top: 10, right: 50, bottom: 60, left: 50},
+    width = 550 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
@@ -13,11 +13,11 @@ const svg = d3.select("#my_dataviz")
           `translate(${margin.left},${margin.top})`);
 
 // get the data
-d3.csv("pizza.csv").then( function(data) {
+d3.csv("https://raw.githubusercontent.com/deidre79/pizza-chart/main/pizza.csv").then( function(data) {
 
   // X axis: scale and draw:
   const x = d3.scaleLinear()
-      .domain([0, 1000])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
+      .domain([1, d3.max(data, function(d) { return +d.Price })])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
       .range([0, width]);
   svg.append("g")
       .attr("transform", `translate(0, ${height})`)
@@ -25,9 +25,17 @@ d3.csv("pizza.csv").then( function(data) {
 
   // set the parameters for the histogram
   const histogram = d3.histogram()
-      .value(function(d) { return d.price; })   // I need to give the vector of value
+      .value(function(d) { return +d.Price; })   // I need to give the vector of value
       .domain(x.domain())  // then the domain of the graphic
-      .thresholds(x.ticks(70)); // then the numbers of bins
+      .thresholds(x.ticks(30)); // then the numbers of bins
+
+  // adding an x-axis label    
+  svg.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", width - 200)
+    .attr("y", height + 35)
+    .text("price in usd ($)");
 
   // And apply this function to data to get the bins
   const bins = histogram(data);
@@ -39,6 +47,16 @@ d3.csv("pizza.csv").then( function(data) {
   svg.append("g")
       .call(d3.axisLeft(y));
 
+  // adding a y-axis label
+  svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", - 50)
+    .attr("x", - 120)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("number of slices");
+
   // append the bar rectangles to the svg element
   svg.selectAll("rect")
       .data(bins)
@@ -47,6 +65,6 @@ d3.csv("pizza.csv").then( function(data) {
     .attr("transform", function(d) { return `translate(${x(d.x0)} , ${y(d.length)})`})
         .attr("width", function(d) { return x(d.x1) - x(d.x0) -1})
         .attr("height", function(d) { return height - y(d.length); })
-        .style("fill", "#69b3a2")
+        .style("fill", "#E62800")
 
 });
